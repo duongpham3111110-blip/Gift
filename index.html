@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Góc Nhỏ Của Chị ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="floating-bg" id="floatingBg"></div>
+
+  <div class="container">
+    <header class="hero">
+      <div class="badge">✨ Góc riêng của chị • Chill &amp; Giải trí</div>
+      <h1>Hôm nay chị có đang <span>xinh xỉu</span> không ta?</h1>
+      <p>
+        Một góc nhỏ để chị nghe nhạc êm êm, xem vài câu khen vui tai, nghịch mini-game
+        và bấm gửi tín hiệu nhẹ cho đầu dây bên kia biết chị đang thế nào.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-soft" onclick="switchTab('compliments')">💖 Thẻ khen vui</button>
+        <button class="btn-soft" onclick="switchTab('gallery')">🖼️ Album 8 ảnh</button>
+        <button class="btn-soft" onclick="switchTab('game')">🎮 Mini-game</button>
+        <button class="btn-soft" onclick="switchTab('fun')">🍀 Quẻ &amp; Trắc nghiệm</button>
+        <button class="btn-soft" onclick="switchTab('mood')">📡 Gửi tín hiệu</button>
+      </div>
+    </header>
+
+    <section class="music-bar">
+      <div class="vinyl-wrap">
+        <div class="vinyl" id="vinyl"></div>
+        <div>
+          <div class="track-title" id="trackTitle">Playlist 1: Nắng Nhẹ Phố Chiều</div>
+          <div class="track-sub" id="trackSub">Hợp âm ấm + tiếng đệm mềm • Bấm Play để nghe</div>
+        </div>
+      </div>
+
+      <div class="music-controls">
+        <button class="btn-primary" id="playMusicBtn" onclick="toggleMusic()">▶ Bật nhạc</button>
+        <button class="btn-soft" onclick="prevTrack()">⏮</button>
+        <button class="btn-soft" onclick="nextTrack()">⏭</button>
+        <span class="vol-label">🔊</span>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.3" onchange="updateVolume(this.value)" />
+      </div>
+    </section>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="compliments" onclick="switchTab('compliments')">💖 Thẻ Khen</button>
+      <button class="tab-btn" data-tab="gallery" onclick="switchTab('gallery')">🖼️ 8 Ảnh</button>
+      <button class="tab-btn" data-tab="game" onclick="switchTab('game')">🎮 Game</button>
+      <button class="tab-btn" data-tab="fun" onclick="switchTab('fun')">🍀 Quẻ Vui</button>
+      <button class="tab-btn" data-tab="mood" onclick="switchTab('mood')">📡 Tín Hiệu</button>
+    </nav>
+
+    <!-- TAB 1: THẺ KHEN -->
+    <section class="panel active" id="panel-compliments">
+      <div class="card">
+        <div class="card-title">🌸 Gương Soi &amp; Thẻ Khen Duyên Dáng</div>
+        <div class="card-desc">Rút một thẻ xem hôm nay năng lượng của chị đang ở mức nào.</div>
+
+        <div class="filter-row" id="categoryFilters">
+          <button class="btn-soft active" data-cat="all" onclick="setCategory('all', this)">Tất cả</button>
+          <button class="btn-soft" data-cat="xinh" onclick="setCategory('xinh', this)">Tự khen xinh</button>
+          <button class="btn-soft" data-cat="hai" onclick="setCategory('hai', this)">Hài duyên</button>
+          <button class="btn-soft" data-cat="chill" onclick="setCategory('chill', this)">Chill nhẹ</button>
+        </div>
+
+        <div class="compliment-stage">
+          <span class="tag-pill" id="compTag">Tự khen xinh</span>
+          <div class="compliment-text" id="compText">Hôm nay cười một cái thôi là thấy cả ngày sáng bừng liền á.</div>
+          <div class="compliment-sub" id="compSub">Nhận xét: Nét tươi tắn này không cần chỉnh sửa gì thêm.</div>
+        </div>
+
+        <div class="action-row">
+          <button class="btn-primary" onclick="drawCompliment()">✨ Rút thẻ mới</button>
+          <button class="btn-soft" onclick="saveCurrentCompliment()">📌 Lưu lại</button>
+          <button class="btn-soft" onclick="sendSignal('Thích câu khen', document.getElementById('compText').textContent)">💌 Báo thích câu này</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📌 Câu Đã Lưu (<span id="savedCount">0</span>)</div>
+        <div class="saved-list" id="savedList">
+          <div class="empty-note">Chưa lưu câu nào — bấm "Lưu lại" ở trên nhé.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: ALBUM 8 ẢNH -->
+    <section class="panel" id="panel-gallery">
+      <div class="card">
+        <div class="card-title">🖼️ Bộ Sưu Tập 8 Khoảnh Khắc</div>
+        <div class="card-desc">Bấm vào từng ảnh để xem lớn hoặc bấm "Tim" để gửi tín hiệu ngay.</div>
+        <div class="photo-grid" id="photoGrid"></div>
+      </div>
+    </section>
+
+    <!-- TAB 3: MINI-GAME -->
+    <section class="panel" id="panel-game">
+      <div class="card">
+        <div class="card-title">🎮 Mini-game: Hứng Năng Lượng Tích Cực</div>
+        <div class="card-desc">
+          Hứng <b>🧋 Trà sữa / 🌸 Hoa / ⭐ Sao / 🍓 Dâu</b> (+10 điểm), né <b>😵‍💫 Deadline / 🌧️ Mệt mỏi</b> (-1 mạng).
+        </div>
+
+        <div class="game-hud">
+          <div>Điểm: <span id="scoreVal">0</span></div>
+          <div>Mạng: <span id="livesVal">❤️❤️❤️</span></div>
+          <div>Kỷ lục: <span id="bestVal">0</span></div>
+          <button class="btn-primary btn-sm" onclick="startGame()">▶ Chơi / Chơi lại</button>
+        </div>
+
+        <canvas id="gameCanvas" width="900" height="360"></canvas>
+        <div id="gameRank" class="game-rank"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: QUẺ & NÚT CHẠY TRỐN -->
+    <section class="panel" id="panel-fun">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🍀 Gieo Quẻ Hôm Nay</div>
+          <div class="card-desc">Xem hôm nay có gì vui ghé thăm chị không.</div>
+
+          <div class="fortune-box">
+            <div class="fortune-icon" id="fortuneIcon">🎋</div>
+            <div class="fortune-title" id="fortuneTitle">Quẻ Sẵn Sàng</div>
+            <div class="fortune-body" id="fortuneBody">Bấm nút để bốc một quẻ vui cho hôm nay.</div>
+          </div>
+
+          <button class="btn-primary btn-full" onclick="pullFortune()">🎲 Bốc quẻ ngay</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🙈 Kiểm Tra Nhanh</div>
+          <div class="card-desc">Hôm nay chị có xinh không? Thử bấm nút xám xem sao.</div>
+
+          <div class="arena" id="arena">
+            <button id="yesPrettyBtn" onclick="celebratePretty()">💖 Có, xinh lắm!</button>
+            <button id="runawayBtn" onmouseover="dodgeButton()" ontouchstart="dodgeButton()" onclick="dodgeButton()">Không xinh lắm</button>
+          </div>
+          <div id="arenaMsg" class="arena-msg"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: GỬI TÍN HIỆU -->
+    <section class="panel" id="panel-mood">
+      <div class="card">
+        <div class="card-title">📡 Gửi Tín Hiệu Nhanh</div>
+        <div class="card-desc">Chọn trạng thái hiện tại hoặc nhắn thêm vài chữ ngắn — bấm gửi là tự báo về ngay.</div>
+
+        <div class="mood-grid" id="moodGrid">
+          <button class="mood-card selected" data-mood="vui" onclick="selectMood('vui', this)">😄 Đang vui vẻ</button>
+          <button class="mood-card" data-mood="buonngu" onclick="selectMood('buonngu', this)">🥱 Hơi buồn ngủ</button>
+          <button class="mood-card" data-mood="ban" onclick="selectMood('ban', this)">💻 Đang bận rộn</button>
+          <button class="mood-card" data-mood="themngon" onclick="selectMood('themngon', this)">🧋 Thèm đồ ngon</button>
+        </div>
+
+        <div class="reply-box" id="moodMessage">
+          Hôm nay chị đang vui vẻ nè, giữ năng lượng tốt như vậy tới cuối ngày nha!
+        </div>
+
+        <div class="note-input-wrap">
+          <label for="customNoteInput" class="quick-reply-label">Nhắn thêm vài chữ vui vui (không bắt buộc):</label>
+          <textarea
+            id="customNoteInput"
+            rows="2"
+            maxlength="180"
+            placeholder="Ví dụ: Nay hơi mệt xíu, hoặc chiều đi trà sữa đi..."
+            oninput="updateCharCount()"
+          ></textarea>
+          <div class="char-counter"><span id="charCount">0</span>/180</div>
+        </div>
+
+        <div class="action-row" style="justify-content:flex-start;">
+          <button class="btn-primary" onclick="sendCurrentMoodSignal()">📤 Gửi tín hiệu này đi</button>
+          <button class="btn-soft" onclick="copyQuickReply()">📋 Hoặc copy để nhắn</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-card">
+      <img id="lightboxImg" src="" alt="" />
+      <div class="lightbox-footer">
+        <span id="lightboxCaption"></span>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-primary btn-sm" id="lightboxHeartBtn">💖 Thả tim ảnh</button>
+          <button class="btn-soft btn-sm" onclick="hideLightbox()">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Đã gửi!</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
